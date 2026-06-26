@@ -1,0 +1,639 @@
+
+
+# Project Name
+
+Enterprise Single Sign-On (SSO) Identity & Access Management System
+
+---
+
+# 1. Introduction
+
+## 1.1 Purpose
+
+یہ document ایک centralized SSO system کی requirements define کرتا ہے جس کے ذریعے multiple applications ایک ہی authentication اور authorization system استعمال کر سکیں گی۔
+
+System کا مقصد:
+
+* Single login experience provide کرنا
+* User identity manage کرنا
+* Roles اور permissions control کرنا
+* Application level security provide کرنا
+* Dynamic authorization implement کرنا
+
+---
+
+# 2. Project Scope
+
+System following functionalities provide کرے گا:
+
+## Authentication
+
+* User Registration
+* User Login
+* Logout
+* Password Reset
+* Email Verification
+* Token Based Authentication
+* Refresh Token Management
+
+## Authorization
+
+* Role Based Access Control (RBAC)
+* Permission Based Access Control
+* User Specific Rights
+* Dynamic Permission Mapping
+* Attribute Based Authorization
+
+## Application Management
+
+* Multiple applications registration
+* Client ID management
+* Client Secret management
+* Application wise access control
+
+---
+
+# 3. User Types
+
+## 3.1 Super Admin
+
+Responsibilities:
+
+* Complete system control
+* Create applications
+* Manage users
+* Create roles
+* Assign permissions
+
+---
+
+## 3.2 Application Admin
+
+Responsibilities:
+
+* Manage application users
+* Assign application rights
+* View logs
+
+---
+
+## 3.3 Normal User
+
+Responsibilities:
+
+* Login
+* Access allowed features
+* Update profile
+
+---
+
+# 4. System Architecture
+
+```
+                Application 1
+                     |
+                Application 2
+                     |
+                Application 3
+
+                     |
+                     |
+
+              SSO Identity Server
+
+                     |
+
+              Authentication DB
+
+```
+
+---
+
+# 5. Functional Requirements
+
+# Module 1: User Management
+
+## User Registration
+
+System shall allow:
+
+* New user creation
+* Email validation
+* Password creation
+* Profile information storage
+
+Fields:
+
+* Name
+* Email
+* Mobile
+* Password
+* Status
+
+---
+
+## Login
+
+User shall login using:
+
+* Email
+* Password
+
+System will:
+
+1. Validate credentials
+2. Check account status
+3. Generate JWT token
+4. Generate Refresh Token
+5. Return access rights
+
+---
+
+# Module 2: Authentication
+
+## JWT Token Generation
+
+System shall generate:
+
+Access Token
+
+Contains:
+
+```
+UserId
+Name
+Roles
+Permissions
+Expiry
+```
+
+---
+
+## Refresh Token
+
+Features:
+
+* Token rotation
+* Expiry management
+* Revocation
+
+---
+
+# Module 3: Role Management
+
+Admin can:
+
+* Create roles
+* Update roles
+* Delete roles
+
+Examples:
+
+```
+Admin
+
+Manager
+
+Employee
+
+Auditor
+
+```
+
+---
+
+# Module 4: Permission Management
+
+System shall support:
+
+Function level permissions
+
+Example:
+
+```
+USER.CREATE
+
+USER.UPDATE
+
+USER.DELETE
+
+REPORT.VIEW
+
+INVOICE.APPROVE
+
+```
+
+---
+
+# Module 5: User Rights Mapping
+
+Admin can assign:
+
+User → Role
+
+Example:
+
+```
+Ali
+
+Role:
+Manager
+
+Permissions:
+
+REPORT.VIEW
+USER.UPDATE
+
+```
+
+---
+
+# Module 6: Attribute Based Authorization
+
+Developer can secure APIs/functions:
+
+Example:
+
+```
+[Permission("USER.CREATE")]
+
+CreateUser()
+
+```
+
+System automatically check کرے گا:
+
+* Current user
+* Assigned permissions
+* Required permission
+
+---
+
+# Module 7: Application Management
+
+Admin can register applications:
+
+Example:
+
+```
+ERP System
+
+CRM System
+
+HR Portal
+
+Mobile App
+
+```
+
+Application information:
+
+```
+Application Name
+
+Client ID
+
+Client Secret
+
+Redirect URL
+
+Status
+
+```
+
+---
+
+# Module 8: NuGet Client Package
+
+System provide کرے گا:
+
+Package Name:
+
+```
+Company.SSO.Client
+
+```
+
+Install:
+
+```
+Install-Package Company.SSO.Client
+
+```
+
+Developer use:
+
+```
+services.AddSSO();
+
+```
+
+Package provide:
+
+* JWT validation
+* Permission checking
+* Attribute authorization
+* Middleware
+
+---
+
+# Module 9: Security Requirements
+
+## Password Security
+
+Password shall be stored using:
+
+* PBKDF2
+* BCrypt
+* Argon2
+
+Plain password storage prohibited.
+
+---
+
+# Token Security
+
+Requirements:
+
+* HTTPS mandatory
+* Token expiry
+* Refresh token rotation
+* Token revocation
+
+---
+
+# API Security
+
+Implement:
+
+* JWT Authentication
+* CORS policy
+* Rate limiting
+* Request validation
+
+---
+
+# 10. Database Requirements
+
+## Users Table
+
+```
+Id
+
+Name
+
+Email
+
+PasswordHash
+
+Status
+
+CreatedDate
+
+```
+
+---
+
+## Roles Table
+
+```
+Id
+
+RoleName
+
+```
+
+---
+
+## Permissions Table
+
+```
+Id
+
+Name
+
+Code
+
+```
+
+---
+
+## UserRoles
+
+```
+UserId
+
+RoleId
+
+```
+
+---
+
+## RolePermissions
+
+```
+RoleId
+
+PermissionId
+
+```
+
+---
+
+## RefreshTokens
+
+```
+UserId
+
+Token
+
+Expiry
+
+Revoked
+
+```
+
+---
+
+# 11. API Requirements
+
+## Authentication APIs
+
+POST
+
+```
+/api/auth/register
+
+```
+
+POST
+
+```
+/api/auth/login
+
+```
+
+POST
+
+```
+/api/auth/refresh-token
+
+```
+
+POST
+
+```
+/api/auth/logout
+
+```
+
+---
+
+# User APIs
+
+GET
+
+```
+/api/users
+
+```
+
+POST
+
+```
+/api/users/create
+
+```
+
+---
+
+# Permission APIs
+
+GET
+
+```
+/api/permissions
+
+```
+
+POST
+
+```
+/api/permissions/assign
+
+```
+
+---
+
+# 12. Audit Logging
+
+System maintain کرے گا:
+
+* Login history
+* Failed attempts
+* Permission changes
+* User activities
+
+Fields:
+
+```
+UserId
+
+Action
+
+IP Address
+
+DateTime
+
+```
+
+---
+
+# 13. Non Functional Requirements
+
+## Performance
+
+System should support:
+
+* Thousands of users
+* Multiple applications
+* High concurrent requests
+
+---
+
+## Availability
+
+Target:
+
+99.9% uptime
+
+---
+
+## Scalability
+
+Support:
+
+* Load balancing
+* Multiple servers
+* Cloud deployment
+
+---
+
+# 14. Deployment Requirements
+
+Supported:
+
+* Windows Server
+* Linux
+* Docker
+* Kubernetes
+
+Database:
+
+* SQL Server
+* PostgreSQL
+
+---
+
+# 15. Future Enhancements
+
+Optional:
+
+* Multi Factor Authentication
+* OTP
+* Google Authenticator
+* Biometric Login
+* Active Directory Integration
+* Single Logout
+* Mobile SDK
+
+---
+
+# 16. Acceptance Criteria
+
+System approved when:
+
+✔ User can register
+
+✔ User can login
+
+✔ JWT generated
+
+✔ Roles assigned
+
+✔ Permissions mapped
+
+✔ Multiple applications authenticate
+
+✔ NuGet package works
+
+✔ Unauthorized users blocked
+
+---
+
+END OF DOCUMENT\
+
+
+
+
+mjy ye bana do dot net 8 main or is main ik ya 2 application ba bana dena jis mian ye test b ki ja saky sso ko implimant kar ke jis main har application ke lie auth ka process nuget pakage sy ho login logout signup wagera 
