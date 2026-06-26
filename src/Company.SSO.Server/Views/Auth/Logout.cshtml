@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Signing Out";
+    var signoutUrls = (List<string>)ViewBag.SignoutUrls;
+    var redirectUri = (string)ViewBag.RedirectUri;
+}
+
+<div style="max-width: 500px; margin: 80px auto; text-align: center;">
+    <div class="glass-card">
+        <!-- Spinner -->
+        <div style="margin-bottom: 24px; position: relative; width: 64px; height: 64px; margin-left: auto; margin-right: auto;">
+            <div style="box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 0; border: 6px solid var(--accent-primary); border-radius: 50%; animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: var(--accent-primary) transparent transparent transparent;"></div>
+        </div>
+
+        <h2 style="margin-bottom: 12px;">Signing Out...</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-top: 0; margin-bottom: 24px;">
+            Terminating your secure session across all connected applications. Please wait.
+        </p>
+
+        <!-- Hidden Front-Channel Logout Iframes -->
+        @foreach (var url in signoutUrls)
+        {
+            <iframe src="@url" style="display:none; width:0; height:0; border:0; visibility:hidden;" sandbox="allow-same-origin allow-scripts"></iframe>
+        }
+    </div>
+</div>
+
+<style>
+    @@keyframes lds-ring {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @@-webkit-keyframes lds-ring {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    // Wait for front-channel iframes to load, then redirect
+    window.addEventListener("load", function() {
+        setTimeout(function() {
+            window.location.href = "@Html.Raw(redirectUri)";
+        }, 1200); // 1.2s delay ensures browser has sent iframe cookies
+    });
+</script>

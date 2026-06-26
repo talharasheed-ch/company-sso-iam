@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "src\\Company.App1\\Company.App1.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\Company.App2\\Company.App2.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\Company.SSO.Server\\Company.SSO.Server.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

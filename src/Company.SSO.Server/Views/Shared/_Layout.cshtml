@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Company SSO Server</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <header>
+            <nav class="navbar">
+                <a class="navbar-brand" href="/">
+                    <span class="gradient-text">Company SSO</span> Portal
+                </a>
+                <div class="navbar-user">
+                    <span>Logged in as: <strong>@User.Identity.Name</strong></span>
+                    <a href="/Auth/Logout" class="btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Logout</a>
+                </div>
+            </nav>
+        </header>
+    }
+    else
+    {
+        <header>
+            <nav class="navbar" style="justify-content: center;">
+                <a class="navbar-brand" href="/">
+                    <span class="gradient-text">Company SSO</span> Identity Server
+                </a>
+            </nav>
+        </header>
+    }
+
+    <div style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <main role="main" style="padding-bottom: 60px;">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

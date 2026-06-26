@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<div style="max-width: 450px; margin: 60px auto;">
+    <div class="glass-card">
+        <h2 style="text-align: center; margin-bottom: 8px;">Welcome Back</h2>
+        <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-top: 0; margin-bottom: 24px;">
+            Sign in to your enterprise account
+        </p>
+
+        @if (ViewBag.ClientId != null)
+        {
+            <div class="badge badge-primary" style="display: block; text-align: center; margin-bottom: 20px; font-size: 0.8rem; padding: 8px;">
+                🔑 Connecting to Secure Application
+            </div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger" style="margin-bottom: 20px;">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p style="margin: 4px 0;">@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <form asp-controller="Auth" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="client_id" value="@ViewBag.ClientId" />
+            <input type="hidden" name="redirect_uri" value="@ViewBag.RedirectUri" />
+            <input type="hidden" name="state" value="@ViewBag.State" />
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input class="form-input" type="email" id="email" name="email" placeholder="name@company.com" required autocomplete="username" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;">Sign In</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 24px; font-size: 0.9rem; color: var(--text-secondary);">
+            Don't have an account? 
+            <a href="/Auth/Register?client_id=@ViewBag.ClientId&redirect_uri=@ViewBag.RedirectUri&state=@ViewBag.State" style="color: var(--accent-primary); font-weight: 600; text-decoration: none;">Create one</a>
+        </div>
+    </div>
+</div>

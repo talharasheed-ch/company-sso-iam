@@ -1,0 +1,98 @@
+@{
+    ViewData["Title"] = "CRM Dashboard";
+}
+
+<div style="margin-bottom: 32px;">
+    <h1>Enterprise CRM Dashboard (App 2)</h1>
+    <p style="color: var(--text-secondary); margin-top: 0;">You have successfully authenticated via Single Sign-On session propagation.</p>
+</div>
+
+<div class="grid-2" style="margin-bottom: 40px;">
+    <!-- Session Details Card -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            👤 Active SSO Session
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Session Identity</span>
+                <strong style="font-size: 1.1rem; color: #fff;">@User.Identity?.Name</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Authentication Type</span>
+                <strong style="color: #fff;">@User.Identity?.AuthenticationType</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">SSO Access Token (JWT)</span>
+                @{
+                    var accessToken = User.FindFirst("access_token")?.Value ?? "N/A";
+                    var tokenPrefix = accessToken.Length > 25 ? accessToken.Substring(0, 25) + "..." : accessToken;
+                }
+                <code style="font-family: monospace; color: var(--accent-primary); word-break: break-all;">@tokenPrefix</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- SSO Cross-Nav Actions -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            🌐 Cross-App Verification
+        </h3>
+        
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+            If you sign out here, you will be signed out globally from the SSO Server and App 1 as well.
+        </p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+            <a href="http://localhost:5001/" class="btn-secondary" style="text-align: center; padding: 12px;" target="_blank">
+                📊 Switch to ERP System (App 1)
+            </a>
+            <a href="http://localhost:5000/" class="btn-secondary" style="text-align: center; padding: 12px;" target="_blank">
+                ⚙️ Manage Profile in SSO Portal
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- CRM Data Table (Mock Business Data) -->
+<div class="glass-card">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">👥 Customer Account Records</h3>
+    
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Account Manager</th>
+                    <th>Annual Revenue</th>
+                    <th>Lifecycle Stage</th>
+                    <th>Last Contacted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Apex Technologies</strong></td>
+                    <td>Sarah Jenkins</td>
+                    <td style="color: var(--accent-secondary); font-weight: 600;">$1,200,000</td>
+                    <td><span class="badge" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-primary); border: 1px solid rgba(13, 148, 136, 0.3);">Customer</span></td>
+                    <td>2026-06-20</td>
+                </tr>
+                <tr>
+                    <td><strong>Stellar Logistics</strong></td>
+                    <td>David Miller</td>
+                    <td style="color: var(--accent-secondary); font-weight: 600;">$850,000</td>
+                    <td><span class="badge" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-primary); border: 1px solid rgba(13, 148, 136, 0.3);">Customer</span></td>
+                    <td>2026-06-21</td>
+                </tr>
+                <tr>
+                    <td><strong>InnoTech Labs</strong></td>
+                    <td>Sarah Jenkins</td>
+                    <td style="color: var(--accent-secondary); font-weight: 600;">$240,000</td>
+                    <td><span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--glass-border);">Lead</span></td>
+                    <td>2026-06-24</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

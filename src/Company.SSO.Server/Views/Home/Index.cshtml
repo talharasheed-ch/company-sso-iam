@@ -1,0 +1,244 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    var currentUser = (Company.SSO.Server.Models.User)ViewBag.CurrentUser;
+    var isSuperAdmin = (bool)ViewBag.IsSuperAdmin;
+    var apps = (List<Company.SSO.Server.Models.Application>)ViewBag.Apps;
+}
+
+<div style="margin-bottom: 32px;">
+    <h1 style="margin-bottom: 8px;">Identity & Access Portal</h1>
+    <p style="color: var(--text-secondary); margin-top: 0;">Manage your SSO applications, permissions, and administrative credentials.</p>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom: 20px;">
+        ✅ @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" style="margin-bottom: 20px;">
+        ❌ @TempData["Error"]
+    </div>
+}
+
+<div class="grid-2" style="margin-bottom: 40px;">
+    <!-- Profile Card -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            👤 User Profile
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Full Name</span>
+                <strong style="font-size: 1.1rem; color: #fff;">@currentUser.Name</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Email Address</span>
+                <strong style="color: #fff;">@currentUser.Email</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Mobile</span>
+                <strong style="color: #fff;">@(string.IsNullOrEmpty(currentUser.Mobile) ? "Not Specified" : currentUser.Mobile)</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">System Roles</span>
+                <div style="margin-top: 6px; display: flex; gap: 8px;">
+                    @foreach (var userRole in currentUser.UserRoles)
+                    {
+                        <span class="badge @(userRole.Role.RoleName == "SuperAdmin" ? "badge-danger" : userRole.Role.RoleName == "ApplicationAdmin" ? "badge-warning" : "badge-primary")">
+                            @userRole.Role.RoleName
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Apps Card -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            🚀 Connected Applications
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            @if (!apps.Any())
+            {
+                <p style="color: var(--text-secondary); font-style: italic;">No applications registered.</p>
+            }
+            else
+            {
+                @foreach (var app in apps)
+                {
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <div>
+                            <strong style="font-size: 1rem; color: #fff;">@app.Name</strong>
+                            <span style="display: block; font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                                Client ID: <code style="color: var(--accent-secondary); font-family: monospace;">@app.ClientId</code>
+                            </span>
+                        </div>
+                        <div>
+                            @if (app.IsActive)
+                            {
+                                <span class="badge badge-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Inactive</span>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@if (isSuperAdmin)
+{
+    var users = (List<Company.SSO.Server.Models.User>)ViewBag.Users;
+    var roles = (List<Company.SSO.Server.Models.Role>)ViewBag.Roles;
+    var auditLogs = (List<Company.SSO.Server.Models.AuditLog>)ViewBag.AuditLogs;
+    
+    <div style="margin-top: 60px; margin-bottom: 24px;">
+        <h2 style="border-bottom: 2px solid var(--glass-border); padding-bottom: 12px; margin-bottom: 32px;">
+            ⚙️ System Administration
+        </h2>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 40px;">
+        <!-- Register App -->
+        <div class="glass-card">
+            <h3 style="margin-top: 0; margin-bottom: 20px;">Register New Application</h3>
+            <form asp-controller="Home" asp-action="RegisterApp" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="appName">Application Name</label>
+                    <input class="form-input" type="text" id="appName" name="name" placeholder="E.g., HR Portal" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="appClientId">Client ID</label>
+                    <input class="form-input" type="text" id="appClientId" name="clientId" placeholder="hr_portal_id" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="appClientSecret">Client Secret</label>
+                    <input class="form-input" type="text" id="appClientSecret" name="clientSecret" placeholder="hr_portal_secret_key_123" required />
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label class="form-label" for="appRedirectUrl">Redirect URL (Callback)</label>
+                    <input class="form-input" type="url" id="appRedirectUrl" name="redirectUrl" placeholder="http://localhost:5003/signin-sso" required />
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Add Application</button>
+            </form>
+        </div>
+
+        <!-- Role Assignment Form -->
+        <div class="glass-card">
+            <h3 style="margin-top: 0; margin-bottom: 20px;">Quick Role Assignment</h3>
+            <form asp-controller="Home" asp-action="AssignUserRole" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="assignUser">Select User</label>
+                    <select class="form-input" id="assignUser" name="userId" required>
+                        <option value="">-- Choose User --</option>
+                        @foreach (var u in users)
+                        {
+                            <option value="@u.Id">@u.Name (@u.Email)</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label class="form-label" for="assignRole">Select New Role</label>
+                    <select class="form-input" id="assignRole" name="roleId" required>
+                        <option value="">-- Choose Role --</option>
+                        @foreach (var r in roles)
+                        {
+                            <option value="@r.Id">@r.RoleName</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Assign Role</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="glass-card" style="margin-bottom: 40px;">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">System Users & Identities</h3>
+        <div class="table-container">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in users)
+                    {
+                        <tr>
+                            <td>@u.Id</td>
+                            <td><strong style="color: #fff;">@u.Name</strong></td>
+                            <td>@u.Email</td>
+                            <td>
+                                @foreach (var ur in u.UserRoles)
+                                {
+                                    <span class="badge @(ur.Role.RoleName == "SuperAdmin" ? "badge-danger" : ur.Role.RoleName == "ApplicationAdmin" ? "badge-warning" : "badge-primary")" style="font-size: 0.7rem; margin-right: 4px;">
+                                        @ur.Role.RoleName
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge @(u.Status == "Active" ? "badge-success" : "badge-danger")">
+                                    @u.Status
+                                </span>
+                            </td>
+                            <td>@u.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <a href="/Home/EditUser/@u.Id" class="btn-secondary" style="padding: 4px 8px; font-size: 0.8rem; text-decoration: none; border-radius: 4px;">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Audit Logs Table -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">Security & Audit Logs</h3>
+        <div class="table-container">
+            <table class="custom-table" style="font-size: 0.85rem;">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action Performed</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in auditLogs)
+                    {
+                        <tr>
+                            <td style="color: var(--text-secondary);">@log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><strong style="color: #fff;">@log.UserName</strong></td>
+                            <td>
+                                <span style="@(log.Action.Contains("Failed") || log.Action.Contains("Error") ? "color: var(--danger);" : log.Action.Contains("Successful") || log.Action.Contains("Token") ? "color: var(--success);" : "color: var(--text-primary);")">
+                                    @log.Action
+                                </span>
+                            </td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">@log.IpAddress</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

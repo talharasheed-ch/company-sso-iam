@@ -1,0 +1,74 @@
+@{
+    ViewData["Title"] = "Invoices Approval";
+}
+
+<div style="margin-bottom: 32px;">
+    <a href="/" style="color: var(--accent-secondary); text-decoration: none; font-size: 0.9rem;">← Back to Dashboard</a>
+    <h1 style="margin-top: 12px; margin-bottom: 8px;">💳 Invoice Approvals</h1>
+    <p style="color: var(--text-secondary); margin-top: 0;">Restricted administrative function. Verified permission: <span class="badge badge-danger" style="font-size: 0.75rem;">INVOICE.APPROVE</span></p>
+</div>
+
+<div class="glass-card">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">Pending Invoices requiring approval</h3>
+    
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Invoice ID</th>
+                    <th>Vendor Name</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Risk Factor</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="inv-1">
+                    <td><code>INV-2026-001</code></td>
+                    <td><strong>Cloud Infra Services</strong></td>
+                    <td>2026-06-20</td>
+                    <td><strong>$24,500.00</strong></td>
+                    <td><span class="badge badge-success">Low</span></td>
+                    <td>
+                        <button onclick="approveInvoice('INV-2026-001')" class="btn-success" style="padding: 6px 12px; font-size: 0.85rem;">Approve</button>
+                    </td>
+                </tr>
+                <tr id="inv-2">
+                    <td><code>INV-2026-002</code></td>
+                    <td><strong>Global Contractors Corp</strong></td>
+                    <td>2026-06-22</td>
+                    <td><strong>$18,200.00</strong></td>
+                    <td><span class="badge badge-warning">Medium</span></td>
+                    <td>
+                        <button onclick="approveInvoice('INV-2026-002')" class="btn-success" style="padding: 6px 12px; font-size: 0.85rem;">Approve</button>
+                    </td>
+                </tr>
+                <tr id="inv-3">
+                    <td><code>INV-2026-003</code></td>
+                    <td><strong>HQ Office Supplies</strong></td>
+                    <td>2026-06-25</td>
+                    <td><strong>$5,400.00</strong></td>
+                    <td><span class="badge badge-success">Low</span></td>
+                    <td>
+                        <button onclick="approveInvoice('INV-2026-003')" class="btn-success" style="padding: 6px 12px; font-size: 0.85rem;">Approve</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function approveInvoice(invoiceId) {
+        alert("Success: Invoice " + invoiceId + " has been approved successfully!");
+        const rows = document.querySelectorAll('.custom-table tbody tr');
+        rows.forEach(row => {
+            if(row.innerHTML.includes(invoiceId)) {
+                row.style.opacity = '0.5';
+                const actionCell = row.querySelector('td:last-child');
+                actionCell.innerHTML = '<span class="badge badge-success">Approved ✅</span>';
+            }
+        });
+    }
+</script>

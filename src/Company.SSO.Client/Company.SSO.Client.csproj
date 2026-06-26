@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<!-- NuGet Metadata -->
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>Company.SSO.Client</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>Talha Rasheed</Authors>
+		<Company>TRSons</Company>
+		<Description>Enterprise IAM SSO Client Middleware for .NET 8 Applications.</Description>
+		<PackageTags>SSO;IAM;OAuth;Security;Middleware</PackageTags>
+		<RepositoryUrl>https://github.com/yourusername/company-sso-client</RepositoryUrl>
+	</PropertyGroup>
+
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+  </ItemGroup>
+
+</Project>

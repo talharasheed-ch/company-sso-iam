@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "ERP Dashboard";
+}
+
+<div style="margin-bottom: 32px;">
+    <h1>Enterprise ERP Dashboard (App 1)</h1>
+    <p style="color: var(--text-secondary); margin-top: 0;">You have successfully authenticated via Single Sign-On.</p>
+</div>
+
+<div class="grid-2" style="margin-bottom: 40px;">
+    <!-- Welcome Info Card -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            👤 Active SSO Session
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Session Identity</span>
+                <strong style="font-size: 1.1rem; color: #fff;">@User.Identity?.Name</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">Authentication Type</span>
+                <strong style="color: #fff;">@User.Identity?.AuthenticationType</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; display: block;">SSO Access Token (JWT)</span>
+                @{
+                    var accessToken = User.FindFirst("access_token")?.Value ?? "N/A";
+                    var tokenPrefix = accessToken.Length > 25 ? accessToken.Substring(0, 25) + "..." : accessToken;
+                }
+                <code style="font-family: monospace; color: var(--accent-secondary); word-break: break-all;">@tokenPrefix</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation Actions -->
+    <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">
+            ⚡ Quick Actions
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="/Home/Reports" class="btn-success" style="text-align: center; padding: 12px;">
+                📊 View Reports Dashboard (Requires REPORT.VIEW)
+            </a>
+            <a href="/Home/Invoices" class="btn-primary" style="text-align: center; padding: 12px;">
+                💳 Approve Invoices (Requires INVOICE.APPROVE)
+            </a>
+            <a href="http://localhost:5002/" class="btn-secondary" style="text-align: center; padding: 12px;" target="_blank">
+                🌐 Visit CRM System (App 2) - Test SSO!
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Raw JWT Claims Inspector -->
+<div class="glass-card">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">🔍 Decoded JWT Claims Inspector</h3>
+    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0; margin-bottom: 20px;">
+        These claims were parsed locally by the <code>Company.SSO.Client</code> package from the cryptographically signed JWT issued by the SSO server.
+    </p>
+
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Claim Type</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var claim in User.Claims.Where(c => c.Type != "access_token" && c.Type != "refresh_token"))
+                {
+                    <tr>
+                        <td style="font-family: monospace; color: var(--text-secondary);">@claim.Type</td>
+                        <td><strong style="color: #fff;">@claim.Value</strong></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

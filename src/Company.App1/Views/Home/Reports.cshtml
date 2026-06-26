@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Reports Dashboard";
+}
+
+<div style="margin-bottom: 32px;">
+    <a href="/" style="color: var(--accent-secondary); text-decoration: none; font-size: 0.9rem;">← Back to Dashboard</a>
+    <h1 style="margin-top: 12px; margin-bottom: 8px;">📊 Financial Reports</h1>
+    <p style="color: var(--text-secondary); margin-top: 0;">Authorized access only. Verified permission: <span class="badge badge-success" style="font-size: 0.75rem;">REPORT.VIEW</span></p>
+</div>
+
+<div class="glass-card" style="margin-bottom: 45px;">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">Q2 Sales Performance Overview</h3>
+    
+    <div style="display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px; text-align: center;">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">Total Revenue</span>
+            <h2 style="font-size: 2rem; color: #fff; margin: 8px 0 0 0;">$342,850</h2>
+        </div>
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px; text-align: center;">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">Gross Profit Margin</span>
+            <h2 style="font-size: 2rem; color: var(--accent-secondary); margin: 8px 0 0 0;">64.2%</h2>
+        </div>
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px; text-align: center;">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">New Customers Seeding</span>
+            <h2 style="font-size: 2rem; color: var(--success); margin: 8px 0 0 0;">+1,420</h2>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Report Period</th>
+                    <th>Transactions</th>
+                    <th>Expenses</th>
+                    <th>Net Profit</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>April 2026</strong></td>
+                    <td>1,204</td>
+                    <td>$45,200</td>
+                    <td style="color: var(--success); font-weight: 600;">$98,400</td>
+                    <td><span class="badge badge-success">Approved</span></td>
+                </tr>
+                <tr>
+                    <td><strong>May 2026</strong></td>
+                    <td>1,422</td>
+                    <td>$48,900</td>
+                    <td style="color: var(--success); font-weight: 600;">$112,500</td>
+                    <td><span class="badge badge-success">Approved</span></td>
+                </tr>
+                <tr>
+                    <td><strong>June 2026 (Projections)</strong></td>
+                    <td>1,650</td>
+                    <td>$52,000</td>
+                    <td style="color: var(--success); font-weight: 600;">$131,950</td>
+                    <td><span class="badge badge-warning">Draft</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

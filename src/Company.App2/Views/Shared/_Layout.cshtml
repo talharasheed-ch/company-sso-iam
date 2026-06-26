@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Company CRM (App 2)</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="navbar-brand" href="/">
+                <span class="gradient-text">Company CRM</span> <span style="font-size: 0.95rem; font-weight: 400; color: var(--text-secondary);">App 2</span>
+            </a>
+            
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <ul class="navbar-menu">
+                    <li><a href="/" class="navbar-link">Dashboard</a></li>
+                </ul>
+                
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="font-size: 0.9rem; color: var(--text-secondary);">
+                        Hi, <strong>@User.Identity.Name</strong>
+                    </span>
+                    <a href="/Home/Logout" class="btn-danger" style="padding: 6px 12px; font-size: 0.85rem; font-weight: 500;">Sign Out</a>
+                </div>
+            }
+        </nav>
+    </header>
+
+    <div style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <main role="main" style="padding-bottom: 60px;">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

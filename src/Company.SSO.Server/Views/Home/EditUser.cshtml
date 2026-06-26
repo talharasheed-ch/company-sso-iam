@@ -1,0 +1,78 @@
+@model Company.SSO.Server.Models.User
+@{
+    ViewData["Title"] = "Edit User";
+    var roles = (List<Company.SSO.Server.Models.Role>)ViewBag.Roles;
+    var userRoleIds = (List<int>)ViewBag.UserRoleIds;
+}
+
+<div style="max-width: 600px; margin: 40px auto;">
+    <a href="/" style="color: var(--accent-secondary); text-decoration: none; font-size: 0.9rem;">← Back to Dashboard</a>
+    
+    <div class="glass-card" style="margin-top: 16px;">
+        <h2 style="margin-top: 0; margin-bottom: 8px;">Edit User Profile & Rights</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0; margin-bottom: 24px;">
+            Update details and configure access roles for account <strong>@Model.Email</strong>
+        </p>
+
+        <form asp-controller="Home" asp-action="EditUser" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="form-group">
+                <label class="form-label" for="editName">Full Name</label>
+                <input class="form-input" type="text" id="editName" name="name" value="@Model.Name" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editEmail">Email Address</label>
+                <input class="form-input" type="email" id="editEmail" name="email" value="@Model.Email" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editMobile">Mobile Number</label>
+                <input class="form-input" type="text" id="editMobile" name="mobile" value="@Model.Mobile" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editStatus">Account Status</label>
+                <select class="form-input" id="editStatus" name="status" required>
+                    <option value="Active" selected="@(Model.Status == "Active")">Active</option>
+                    <option value="Suspended" selected="@(Model.Status == "Suspended")">Suspended</option>
+                    <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 32px;">
+                <label class="form-label">Assign System Roles</label>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px;">
+                    @foreach (var role in roles)
+                    {
+                        var isChecked = userRoleIds.Contains(role.Id);
+                        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                            <input type="checkbox" name="roleIds" value="@role.Id" checked="@isChecked" style="width: 18px; height: 18px; accent-color: var(--accent-primary);" />
+                            <div>
+                                <span style="font-weight: 600; color: #fff;">@role.RoleName</span>
+                                @if (role.RoleName == "SuperAdmin")
+                                {
+                                    <span style="display: block; font-size: 0.75rem; color: var(--danger);">Grants complete system control and access to all apps.</span>
+                                }
+                                else if (role.RoleName == "ApplicationAdmin")
+                                {
+                                    <span style="display: block; font-size: 0.75rem; color: var(--warning);">Allows managing application users and viewing audit logs.</span>
+                                }
+                                else
+                                {
+                                    <span style="display: block; font-size: 0.75rem; color: var(--text-secondary);">Default role. Standard user access.</span>
+                                }
+                            </div>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 16px;">
+                <button type="submit" class="btn-primary" style="flex: 1;">Save Changes</button>
+                <a href="/" class="btn-secondary" style="flex: 1; padding: 12px 0; text-align: center; line-height: 24px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

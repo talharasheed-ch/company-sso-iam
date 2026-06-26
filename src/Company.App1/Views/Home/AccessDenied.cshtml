@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div style="max-width: 500px; margin: 80px auto; text-align: center;">
+    <div class="glass-card" style="border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.1);">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
+        
+        <h2 style="color: #fca5a5; margin-bottom: 12px;">403 - Access Denied</h2>
+        
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 32px;">
+            Your account does not possess the function-level permission required to access this resource. 
+            This policy is enforced dynamically by the <code>Company.SSO.Client</code> package.
+        </p>
+
+        <div style="display: flex; gap: 16px; justify-content: center;">
+            <a href="/" class="btn-secondary" style="padding: 12px 20px;">
+                Return to Dashboard
+            </a>
+            <a href="http://localhost:5000/" class="btn-primary" style="padding: 12px 20px;" target="_blank">
+                Manage Roles on SSO Server
+            </a>
+        </div>
+    </div>
+</div>

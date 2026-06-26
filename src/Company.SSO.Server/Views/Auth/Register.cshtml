@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Register Account";
+}
+
+<div style="max-width: 450px; margin: 60px auto;">
+    <div class="glass-card">
+        <h2 style="text-align: center; margin-bottom: 8px;">Create Account</h2>
+        <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-top: 0; margin-bottom: 24px;">
+            Register a new enterprise identity
+        </p>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger" style="margin-bottom: 20px;">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p style="margin: 4px 0;">@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <form asp-controller="Auth" asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="client_id" value="@ViewBag.ClientId" />
+            <input type="hidden" name="redirect_uri" value="@ViewBag.RedirectUri" />
+            <input type="hidden" name="state" value="@ViewBag.State" />
+
+            <div class="form-group">
+                <label class="form-label" for="name">Full Name</label>
+                <input class="form-input" type="text" id="name" name="name" placeholder="John Doe" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input class="form-input" type="email" id="email" name="email" placeholder="name@company.com" required autocomplete="username" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="mobile">Mobile Number</label>
+                <input class="form-input" type="text" id="mobile" name="mobile" placeholder="+123456789" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password" />
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;">Register</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 24px; font-size: 0.9rem; color: var(--text-secondary);">
+            Already have an account? 
+            <a href="/Auth/Login?client_id=@ViewBag.ClientId&redirect_uri=@ViewBag.RedirectUri&state=@ViewBag.State" style="color: var(--accent-primary); font-weight: 600; text-decoration: none;">Sign in</a>
+        </div>
+    </div>
+</div>
